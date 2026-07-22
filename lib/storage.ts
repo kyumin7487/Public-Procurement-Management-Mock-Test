@@ -1,9 +1,20 @@
+export interface SubjectResult {
+    subjectId: string;
+    subjectName: string;
+    earnedScore: number;
+    maxScore: number;
+    passed: boolean;
+}
+
 export interface AttemptRecord {
     examSetId: string;
     examTitle: string;
     date: string; // ISO
-    score: number; // 정답 수
-    total: number;
+    subjectResults: SubjectResult[];
+    average: number;
+    passed: boolean;
+    correctCount: number;
+    totalCount: number;
     durationSec: number;
     wrongQuestionIds: string[];
 }
@@ -22,8 +33,9 @@ export function getAttempts(): AttemptRecord[] {
     return raw ? JSON.parse(raw) : [];
 }
 
-export function getAttemptsBySet(examSetId: string): AttemptRecord[] {
-    return getAttempts().filter((a) => a.examSetId === examSetId);
+export function getLastAttempt(): AttemptRecord | undefined {
+    const list = getAttempts();
+    return list[list.length - 1];
 }
 
 export function clearAttempts() {
