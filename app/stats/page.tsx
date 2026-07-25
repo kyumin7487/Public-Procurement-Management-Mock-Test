@@ -5,11 +5,21 @@ import Link from "next/link";
 import { getAttempts } from "@/lib/storage";
 import { AttemptRecord } from "@/lib/types";
 
+function isValidAttempt(a: unknown): a is AttemptRecord {
+    const r = a as AttemptRecord;
+    return (
+        !!r &&
+        Array.isArray(r.subjectResults) &&
+        Array.isArray(r.items) &&
+        typeof r.average === "number"
+    );
+}
+
 export default function StatsPage() {
     const [attempts, setAttempts] = useState<AttemptRecord[]>([]);
 
     useEffect(() => {
-        setAttempts(getAttempts());
+        setAttempts(getAttempts().filter(isValidAttempt));
     }, []);
 
     return (
