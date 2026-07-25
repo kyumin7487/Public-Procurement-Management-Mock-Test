@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAttempts, AttemptRecord } from "@/lib/storage";
+import { getAttempts } from "@/lib/storage";
+import { AttemptRecord } from "@/lib/types";
 
 export default function StatsPage() {
     const [attempts, setAttempts] = useState<AttemptRecord[]>([]);
@@ -18,12 +19,12 @@ export default function StatsPage() {
             {attempts.length === 0 ? (
                 <p className="text-gray-500">아직 응시 기록이 없습니다.</p>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {attempts
                         .slice()
                         .reverse()
-                        .map((a, i) => (
-                            <div key={i} className="p-4 rounded border border-gray-200">
+                        .map((a) => (
+                            <div key={a.id} className="p-4 rounded border border-gray-200">
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <p className="font-semibold">{a.examTitle}</p>
@@ -45,7 +46,7 @@ export default function StatsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2 flex-wrap">
+                                <div className="flex gap-2 flex-wrap mb-2">
                                     {a.subjectResults.map((r) => (
                                         <span
                                             key={r.subjectId}
@@ -59,6 +60,13 @@ export default function StatsPage() {
                     </span>
                                     ))}
                                 </div>
+
+                                <Link
+                                    href={`/review?id=${a.id}`}
+                                    className="text-xs text-blue-600 underline"
+                                >
+                                    오답노트 보기
+                                </Link>
                             </div>
                         ))}
                 </div>
